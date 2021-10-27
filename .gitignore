@@ -1,6 +1,12 @@
 # macOS
 .DS_Store
 
+# vscode
+.vscode
+
+# python venv
+env*/
+
 # LaTeX
 *.aux
 *.bit
