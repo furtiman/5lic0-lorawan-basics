@@ -1,3 +1,0 @@
-[submodule "mbed-os-example-lorawan"]
-	path = mbed-os-example-lorawan
-	url = git@github.com:ARMmbed/mbed-os-example-lorawan.git
