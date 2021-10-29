@@ -3,13 +3,12 @@
 ### 5LIC0 - Networked Embedded Systems
 This repository contains guide and resources to quickly deploy an experimental LoRaWAN network. It contains guides for various nodes and gateways, as well as setting up network server locally or in cloud with The Things Stack.
 
-Perform this to load the example project for the nodes prior to continuing with
-the manual
+Section 2 - Setting up and deploying gateways - provides a non-exhaustive
+list of recommended gateways that can be used to start with LoRaWAN deployment.
 
-```bash
-➜ git submodule init
-➜ git submodule update
-```
+Section 5 - Setting up and deploying nodes - provides a non-exhaustive
+list of recommended experimental nodes that can be used to start with
+LoRaWAN deployment.
 
 # Table of Contents
 1. [Setting up Network Server](#network-server)
@@ -26,13 +25,15 @@ the manual
 
 4. [Setting up development environment](#setting-up-env)
     * [STM32CubeIDE](#stm32-ide)
-    * [Using Mbed CLI and GNU Arm embedded toolchain](#toolchain)
+    * [Local Mbed CLI and GNU Arm embedded toolchain](#toolchain)
         - [Preparing and compiling the project for the first time](#first-compile)
-    * [Using Mbed online compiler](#online-compiler)
+    * [Mbed online compiler](#online-compiler)
 
 5. [Setting up and deploying nodes](#setting-up-nodes)
-    * [B-L072Z-LRWAN1 STM32 Discovery Kit](#discovery-kit)
-    * [Nucleo-L073RZ Dev Board with I-NUCLEO-LRWAN1 LoRa Sensor Expansion Board](#nucleo-node)
+    * [Adding device to The Things Stack](#device-tts)
+    * [Firmware - The Things Uno](#thethingsuno)
+    * [Firmware - B-L072Z-LRWAN1 STM32 Discovery Kit](#discovery-kit)
+    <!-- * [Firmware - Nucleo-L073RZ Dev Board with I-NUCLEO-LRWAN1 LoRa Sensor Expansion Board](#nucleo-node) -->
 
 ____________________________________
 1. ### Setting up Network Server<a name="network-server">
@@ -42,6 +43,11 @@ ____________________________________
     
     It is possible to use the community cloud version, that is deployed globally and operated by TTN, as well as deploy an independent instance of the stack.
     The latter provides more versatility in terms of customization, as well as autonomicity, while community network provides vanilla flow that is extremely easy and fast to start with.
+
+    This guide shows the use of the console (GUI client) for TTN, however there
+    is also a CLI client available (ttn-lw-cli). It can provide more versatile
+    configuration options for various deployment cases.
+
     * #### The Things Stack Community Edition<a name="tts-community">
     Using this option boils down to creating an account in the community network server.
     Adding an application, gateways and devices is described in the further parts
@@ -74,7 +80,7 @@ Before proceeding, go to The Things Network Console -> Gateways -> Add Gateway a
 
 ![image](./res/gw-srv-addr.png)
 
-* #### Nucleo-F746ZG Dev Board with Gateway Expansion Board<a name="nucleo-gateway">
+### Nucleo-F746ZG Dev Board with Gateway Expansion Board<a name="nucleo-gateway">
 This gateway comes a part of LoRa STM32 Nucleo pack. A full manual for the pack
 can be found [here](./doc/nucleo-pack-config.pdf) - section 6 on page 28 describes the gateway setup.
 
@@ -136,36 +142,61 @@ You can also manually add the location of the gateway on the map.
 
 ![image](./res/nucleo-gw-console.png)
 
-* #### The Things Indoor Gateway<a name="ttig">
+### The Things Indoor Gateway<a name="ttig">
 ![image](./res/ttig.jpg)
-A detailed instruction on how to claim TTIG can be found [here](https://www.thethingsindustries.com/docs/gateways/thethingsindoorgateway/).
 
-* #### Tektelic Kona Micro<a name="kona">
+A detailed instruction on how to set up TTIG can be found [here](https://www.thethingsindustries.com/docs/gateways/thethingsindoorgateway/).
 
-* #### Mikrotik LoRa wAP<a name="mikrotik">
+### Tektelic Kona Micro<a name="kona">
+![image](./res/kona.jpg)
 
+A robust gateway with great hardware.
+
+A detailed instruction on how to set up Tektelic Kona Micro
+can be found [here](https://www.thethingsindustries.com/docs/gateways/tektelickonamicro/)
+
+### MikroTik Routerboard wAP LoRa8 kit<a name="mikrotik">
+
+![image](./res/mikrotik.jpg)
+
+This is a great gateway that can also serve as a Wi-Fi access point simultaneously.
+
+A detailed instruction on how to set up MikroTik Routerboard wAP LoRa8 kit
+can be found [here](https://www.thethingsindustries.com/docs/gateways/mikrotikrouterboard/)
 ____________________________________
 2. ### Creating Application and Adding Integrations<a name="network-server">
-To be 
+To be able to add nodes and manage their data, an application is needed.
+To create an application, go to console -> Applications -> Add application.
+
+Simply enter an Application ID and press "Create application".
+
+Now you are ready to add devices.
+
+![image](./res/app-created.png)
+
 ____________________________________
-3. ### Setting up development environment<a name="setting-up-env">
+3. ### Setting up development environment (B-L072Z-LRWAN1 STM32 Discovery Kit)<a name="setting-up-env">
 
-#### STM32CubeIDE <a name="stm32-ide">
-This variant can be used to create firmwares for both `B-L072Z-LRWAN1 STM32`
-and `Nucleo-L073RZ Dev Board with I-NUCLEO-LRWAN1`
+This section is dedicated to configuring different types of development
+environment for developing firmware for B-L072Z-LRWAN1 STM32 Discovery Kit.
 
+mbedOS is the recommended platform, as it is more versatile and easy to work with
+than LoRaWAN extension modules for STM32CubeIDE. First two sections describe
+two ways of working with mbedOS, the last section is dedicated to STM32CubeIDE.
 
-#### Using Mbed CLI and GNU Arm embedded toolchain <a name="toolchain">
+#### Local Mbed CLI and GNU Arm embedded toolchain <a name="toolchain">
 mbedOS allows for various ways to create and cross-compile the firmware for
 a lot of end devices and development boards. The `B-L072Z-LRWAN1 STM32` board
 from the nodes in this manual supports mbedOS.
 
 This variant allows for working wit the code and cross-compiling locally.
 
-More details about installing the Mbed CLI 2 (including Windows), as well as dependencies can be found [here](https://os.mbed.com/docs/mbed-os/v6.15/build-tools/mbed-cli-2.html).
+More details about installing the Mbed CLI 2 (including Windows), as well as 
+dependencies can be found [here](https://os.mbed.com/docs/mbed-os/v6.15/build-tools/mbed-cli-2.html).
 
-Below the install
-Prerequisites (for Unix systems):
+Below the installation process:
+
+Prerequisites (for Unix systems)
  - Make sure you have Python 3.6 or higher, and the corresponding development package (i.e. `python3-dev`)
  - Install [CMake](htps://cmake.org/install/)
  - Install [Ninja ](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages)
@@ -207,16 +238,125 @@ mbed-os         https://github.com/ARMmbed/mbed-os  /Users/ivanturasov/5lic_repo
 ```
 Now the project is ready for building, refer to project readme in `./mbed-os-example-lorawan/README.md`
 
-* #### Using Mbed online compiler<a name="online-compiler">
+#### Mbed online compiler<a name="online-compiler">
+
+Go to https://os.mbed.com/accounts/login/ and create an account.
+After logging in, go to `Compiler` in the top right of the page, near profile,
+and verify you can see the online IDE.
+
+#### STM32CubeIDE <a name="stm32-ide">
+This variant can be used to create firmwares for both `B-L072Z-LRWAN1 STM32`
+and `Nucleo-L073RZ Dev Board with I-NUCLEO-LRWAN1`
+
+First download and install the IDE ([link](https://www.st.com/en/development-tools/stm32cubeide.html)). It requires registering a free profile at the ST portal.
+
+Launch the IDE, and note the path to the workspace that you begin in.
+After, download the [I-CUBE-LRWAN software expansion](https://www.st.com/en/embedded-software/i-cube-lrwan.html) and move the downloaded files to the workspace
+directory for convenience.
+
+At this point, the pre-configuration is complete, further steps are described in
+the respective end devices'
+
 ____________________________________
 
 4. ### Setting up and deploying nodes<a name="setting-up-nodes">
-    This part is dedicated to configuring the example firmware for the nodes 
-    building it and flashing it to the device.
-    The base for the firmware was chosen to be arm mbedOS (other possibilities and motivation for this choice are described in the high-level report).
+This part is dedicated to configuring the example firmware for the nodes 
+building it and flashing it to the device.
+The base for the firmware can be different - B-L072Z-LRWAN1 can run arm
+mbedOS and ST firmware, while Nucleo-L073RZ can only be used with ST firmware at
+the moment of writing.
 
-    * #### B-L072Z-LRWAN1 STM32 Discovery Kit<a name="discovery-kit">
-        - 
-    * #### Nucleo-L073RZ Dev Board with I-NUCLEO-LRWAN1 LoRa Sensor Expansion Board<a name="nucleo-node">
-    [This link](https://os.mbed.com/platforms/ST-Nucleo-L073RZ/) contains description of the board pinout, as well as other specifications and documents.
+#### Adding device to The Things Stack<a name="device-tts">
+Go to the console, navigate to the application created in the section above,
+and click `Add end device` button.
+
+This step is the same for both nodes described further.
+
+Go to the tab `Manually` and configure the following parameters:
+
+- Frequency plan - select the same, as was selected for the gateway (`Europe 863-870 MHz (SF9 for RX2)`)
+- LoRaWAN version - MAC V1.0.3
+- Regional Parameters Version - PHY V1.0.3 REV A
+- DevEUI - Generate
+- AppEUI - Fill with zeros
+- AppKey - Generate
+- End device ID - any string (e.g. `my-new-device`)
+
+Click `Register end device`.
+
+![image](./res/end-device-create.png)
+
+```
+Note - advanced activation options like ABP can be configured here, but this
+manual covers only OTAA. For more details explore The Things Network
+documentation.
+```
+
+#### Firmware - The Things Uno<a name="thethingsuno">
+
+![image](./res/uno.jpg)
+
+The Things Uno (actually based on Arduino Leonardo) is a perfect device to start
+rapid prototyping with LoRaWAN.
+
+Extensive guide on how to start with, configure and flash this board can be found
+[here](https://www.thethingsindustries.com/docs/devices/the-things-uno/).
+#### Firmware - B-L072Z-LRWAN1 STM32 Discovery Kit<a name="discovery-kit">
+- #### mbedOS
+    The mbed-os example provided in `./mbed-os-example-lorawan` can be modified
+    to add peripherals, LED controls or anything else - for this add code to
+    `main.c`.
+
+    - Local
+
+        Navigate to `./mbed-os-example-lorawan` and follow the build
+        and flash instructions in the `README.md`.
+
+        Fille the `"lora.device-eui"`, `"lora.application-eui"` and
+        `"lora.application-key"` fields in `mbed_app.json` with the DevEUI,
+        AppEUI and AppKey generated in the console in the previous step.
+
+        Flash the resulting binary with either `--flash` flag in mbed-tools, or by dragging the .bin file in the USB volume of the
+        node connected to the host machine
+
+    - Online
+
+        Go to [mbed-os-example-lorawan](https://os.mbed.com/teams/mbed-os-examples/code/mbed-os-example-lorawan/) page and click `Import into compiler`.
+
+        ![image](./res/mbed-online-import.png)
+
+        Fille the `"lora.device-eui"`, `"lora.application-eui"` and
+        `"lora.application-key"` fields in `mbed_app.json` with the DevEUI,
+        AppEUI and AppKey generated in the console in the previous step.
+
+        Compile and download the binary, and put it in the USB volume of the
+        node connected to the host machine.
+
+- #### STM32CubeIDE
+
+Open the IDE and go to Import the project, then select `Import Atolli TrueSTUDIO Project`
+
+Select the path where you saved the LoRaWAN extension, and navigate to `STM32CubeIDE/STM32CubeExpansion_LRWAN_V2.1.0/Projects/B-L072Z-LRWAN1/Applications/LoRaWAN/LoRaWAN_End_Node`
+
+Select the project that contains `cmwx1zzabz_0xx` and click Finish.
+
+![image](./res/b-ext.png)
+
+In the file explorer open the file
+`STM32CubeIDE/STM32CubeExpansion_LRWAN_V2.1.0/Projects/B-L072Z-LRWAN1/Applications/LoRaWAN/LoRaWAN_End_Node/LoRaWAN/App/se-identity.h`
+and fill in the keys generated when creating the device in the console
+
+![image](./res/st-keys.png)
+
+Build the firmware with the hammer in the left top corner, and then run it in the device with the play button. After it's flashed, open the serial monitor and verify that the keys are configured correctly and the connection with the server was successful.
+
+The device page in the application should be showing the messages flying from the device.
+
+<!-- #### Firmware - Nucleo-L073RZ Dev Board with I-NUCLEO-LRWAN1 LoRa Sensor Expansion Board<a name="nucleo-node">
+[This link](https://os.mbed.com/platforms/ST-Nucleo-L073RZ/) contains description of the board pinout, as well as other specifications and documents.
+
+The I-NUCLEO-LRWAN1 shield is not yet supported by mbedOS, so only the
+firmware compiled with STM32CubeIDE can be used.
+
+The flow is pretty much similar to the STM32CubeIDE part of B-L072Z-LRWAN1. -->
 ____________________________________
